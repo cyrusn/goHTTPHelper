@@ -1,4 +1,5 @@
-package golangHTTPHelper
+// goHTTPHelper stores some helper func for http package
+package goHTTPHelper
 
 // httpLogger is a simple logger to log the request info
 import (
@@ -8,8 +9,8 @@ import (
 	"net/http"
 )
 
-// ErrorMessage store error information
-type ErrorMessage struct {
+// errorMessage store error information
+type errorMessage struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
 }
@@ -36,6 +37,6 @@ func PrintError(w http.ResponseWriter, err error, errCode int) {
 }
 
 func generateErrorMessage(code int, message error) string {
-	b, _ := json.Marshal(ErrorMessage{code, message.Error()})
+	b, _ := json.Marshal(errorMessage{code, message.Error()})
 	return fmt.Sprintf("%s", b)
 }
