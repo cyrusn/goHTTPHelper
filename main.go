@@ -25,7 +25,7 @@ func Logger(handler http.Handler) http.Handler {
 // PrintJSON print json string to http.ResponseWriter
 func PrintJSON(w http.ResponseWriter, v interface{}, errCode int) {
 	if err := json.NewEncoder(w).Encode(v); err != nil {
-		errPrint(w, err, errCode)
+		PrintError(w, err, errCode)
 	}
 }
 
@@ -36,6 +36,6 @@ func PrintError(w http.ResponseWriter, err error, errCode int) {
 }
 
 func generateErrorMessage(code int, message error) string {
-	b, _ := json.Marshal(errorMessage{code, message.Error()})
+	b, _ := json.Marshal(ErrorMessage{code, message.Error()})
 	return fmt.Sprintf("%s", b)
 }
