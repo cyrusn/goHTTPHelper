@@ -24,7 +24,8 @@ func Logger(handler http.Handler) http.Handler {
 }
 
 // PrintJSON print json string to http.ResponseWriter
-func PrintJSON(w http.ResponseWriter, v interface{}, errCode int) {
+func PrintJSON(w http.ResponseWriter, v interface{}) {
+	errCode := http.StatusBadRequest
 	if err := json.NewEncoder(w).Encode(v); err != nil {
 		PrintError(w, err, errCode)
 	}
@@ -37,9 +38,13 @@ func PrintError(w http.ResponseWriter, err error, errCode int) {
 }
 
 // UnmarshalErrMessage unmarshal error message
-func UnmarshalErrMessage(response []byte, errMessage *ErrorMessage) error {
-	err := json.Unmarshal(response, &errMessage)
-	return err
+func UnmarshalErrMessage(body []byte) (*ErrorMessage, error) {
+	errMessage := new(ErrorMessage)
+	err := json.Unmarshal(body, errMessage)
+	if err != nil {
+		return nil, err
+	}
+	return errMessage, nil
 }
 
 func generateErrorMessage(code int, message error) string {
