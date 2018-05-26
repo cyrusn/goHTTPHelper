@@ -30,13 +30,19 @@ func PrintError(w http.ResponseWriter, err error, errCode int) {
 	http.Error(w, errMessage, errCode)
 }
 
-// errorMessage store error information
-type errorMessage struct {
+// ErrorMessage store error information
+type ErrorMessage struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
 }
 
 func generateErrorMessage(code int, message error) string {
-	b, _ := json.Marshal(errorMessage{code, message.Error()})
+	b, _ := json.Marshal(ErrorMessage{code, message.Error()})
 	return fmt.Sprintf("%s", b)
+}
+
+// UnmarshalErrMessage unmarshal error message
+func UnmarshalErrMessage(response string, errMessage *ErrorMessage) error {
+	err := json.Unmarshal(response, &errMessage)
+	return err
 }
