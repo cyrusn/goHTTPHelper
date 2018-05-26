@@ -42,7 +42,7 @@ func generateErrorMessage(code int, message error) string {
 }
 
 // UnmarshalErrMessage unmarshal error message
-func UnmarshalErrMessage(response string, errMessage *ErrorMessage) error {
+func UnmarshalErrMessage(response []byte, errMessage *ErrorMessage) error {
 	err := json.Unmarshal(response, &errMessage)
 	return err
 }
