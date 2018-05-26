@@ -9,6 +9,12 @@ import (
 	"net/http"
 )
 
+// ErrorMessage store error information
+type ErrorMessage struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}
+
 // Logger is a middleware to log all http requests
 func Logger(handler http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -30,19 +36,13 @@ func PrintError(w http.ResponseWriter, err error, errCode int) {
 	http.Error(w, errMessage, errCode)
 }
 
-// ErrorMessage store error information
-type ErrorMessage struct {
-	Code    int    `json:"code"`
-	Message string `json:"message"`
+// UnmarshalErrMessage unmarshal error message
+func UnmarshalErrMessage(response []byte, errMessage *ErrorMessage) error {
+	err := json.Unmarshal(response, &errMessage)
+	return err
 }
 
 func generateErrorMessage(code int, message error) string {
 	b, _ := json.Marshal(ErrorMessage{code, message.Error()})
 	return fmt.Sprintf("%s", b)
-}
-
-// UnmarshalErrMessage unmarshal error message
-func UnmarshalErrMessage(response []byte, errMessage *ErrorMessage) error {
-	err := json.Unmarshal(response, &errMessage)
-	return err
 }
